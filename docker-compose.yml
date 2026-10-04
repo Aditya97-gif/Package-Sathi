@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  # ── Backend (FastAPI + OCR/NLP pipeline) ─────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lm-compliance-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persist uploads, reports, and SQLite DB outside the container
+      - ./data:/app/data
+      - ./rules:/app/rules
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Frontend dev server (development only — remove for production) ─────────
+  frontend-dev:
+    image: node:20-alpine
+    container_name: lm-compliance-frontend
+    working_dir: /app
+    command: sh -c "npm ci --silent && npm run dev -- --host"
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    profiles:
+      - dev   # Only started with: docker compose --profile dev up
+
+# ── Named volumes ──────────────────────────────────────────────────────────
+volumes:
+  data:

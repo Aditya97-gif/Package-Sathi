@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0.0",
+  "last_updated": "2025-11-11",
+  "source": "Legal Metrology (Packaged Commodities) Rules, 2011 — Rule 6 + FAQ update Nov 2025",
+
+  "mandatory_declarations": [
+    {
+      "id": "manufacturer_name",
+      "label": "Manufacturer / Packer Name & Address",
+      "required": true,
+      "description": "Full name and complete postal address of the manufacturer or packer, including PIN code.",
+      "regex_hints": ["(?:Mfr|Mfd|Manufactured|Packed)\\s+by", "(?:MFR|PKD)\\s+BY"],
+      "min_font_height_mm": 1.0
+    },
+    {
+      "id": "net_quantity",
+      "label": "Net Quantity",
+      "required": true,
+      "description": "Net quantity in standard SI units: mass (g/kg), volume (ml/L), or count (Number/N).",
+      "accepted_units": ["g", "kg", "ml", "L", "l", "Number", "N"],
+      "regex_hints": ["Net\\s*(?:Qty|Quantity|Wt|Weight)\\s*[:\\-]?\\s*\\d+"],
+      "min_font_height_mm": 2.0,
+      "note": "Must not include the weight of packaging."
+    },
+    {
+      "id": "mrp",
+      "label": "Maximum Retail Price (MRP)",
+      "required": true,
+      "description": "MRP inclusive of all taxes, in Indian Rupees. Both 'Rs.' and '₹' are acceptable.",
+      "accepted_symbols": ["Rs.", "₹", "Rs"],
+      "inclusive_of_taxes": true,
+      "regex_hints": ["(?:MRP|M\\.R\\.P\\.)\\s*[:\\-]?\\s*(?:Rs\\.?|₹)\\s*\\d+"],
+      "min_font_height_mm": 1.5
+    },
+    {
+      "id": "mfg_date",
+      "label": "Month & Year of Manufacture / Packing",
+      "required": true,
+      "description": "Month and year of manufacture or packing. Format: MM/YYYY, MM-YYYY, or abbreviated month name.",
+      "accepted_formats": ["MM/YYYY", "MM-YYYY", "Mon-YY", "Mon YYYY"],
+      "regex_hints": ["(?:MFD|PKD|MFR|Mfg\\s*Date)\\s*[:\\-]?\\s*(?:\\d{2}[\\-\\/]\\d{4}|[A-Za-z]{3}[\\- ]\\d{2,4})"],
+      "min_font_height_mm": 1.0
+    },
+    {
+      "id": "expiry_date",
+      "label": "Expiry / Best Before / Use By Date",
+      "required": false,
+      "required_for_categories": ["food", "pharmaceutical", "cosmetic"],
+      "description": "Expiry date, best before date, or use by date. Can be expressed as months from manufacture.",
+      "regex_hints": ["(?:USE\\s*BY|EXP|BEST\\s*BEFORE)\\s*[:\\-]?\\s*(?:\\d{1,2}[\\-\\/\\.][0-9]{2,4}|\\d+\\s*months?)"],
+      "min_font_height_mm": 1.0
+    },
+    {
+      "id": "consumer_care",
+      "label": "Consumer Care Phone / Email",
+      "required": true,
+      "description": "Consumer care contact — phone number (toll-free preferred) and/or email address.",
+      "regex_hints": [
+        "(?:call|toll[- ]free|helpline)\\s*[:\\-]?\\s*[0-9\\s]{8,}",
+        "[a-zA-Z0-9_.+\\-]+@[a-zA-Z0-9\\-]+\\.[a-zA-Z0-9.\\-]+"
+      ],
+      "min_font_height_mm": 1.0
+    },
+    {
+      "id": "fssai_license",
+      "label": "FSSAI License Number",
+      "required": false,
+      "required_for_categories": ["food", "beverage"],
+      "description": "14-digit FSSAI license number for food and beverage products.",
+      "format": "14 numeric digits",
+      "regex_hints": ["(?:FSSAI|Lic\\s*No\\.?)\\s*[:\\-]?\\s*\\d{14}"]
+    }
+  ],
+
+  "principal_display_panel": {
+    "description": "The PDP is the surface of the package most likely to be displayed to the consumer at the point of sale.",
+    "area_formulas": {
+      "rectangular": "one full side (length × width of largest face)",
+      "cylindrical": "40% of total lateral surface area (π × diameter × height × 0.4)",
+      "other": "40% of total surface area"
+    },
+    "excluded_surfaces": ["tops", "bottoms", "can flanges", "bottle necks", "jar necks"]
+  },
+
+  "minimum_font_heights_mm": {
+    "note": "Font height measured as the height of capital letters on the PDP.",
+    "by_pdp_area_cm2": [
+      { "max_area": 100, "min_height": 1.0 },
+      { "max_area": 200, "min_height": 1.5 },
+      { "max_area": 500, "min_height": 2.0 },
+      { "max_area": 999999, "min_height": 4.0 }
+    ]
+  },
+
+  "exemptions": [
+    {
+      "id": "industrial_institutional",
+      "description": "Packages marked 'NOT FOR RETAIL SALE' supplied to industrial or institutional consumers are exempt from MRP and consumer care requirements.",
+      "regex_hint": "NOT\\s+FOR\\s+RETAIL\\s+SALE"
+    },
+    {
+      "id": "export_only",
+      "description": "Packages intended solely for export are exempt from these rules.",
+      "regex_hint": "FOR\\s+EXPORT\\s+ONLY"
+    }
+  ],
+
+  "mrp_format_rules": {
+    "must_include_taxes": true,
+    "acceptable_prefixes": ["Rs.", "Rs", "₹", "MRP Rs.", "M.R.P Rs.", "MRP ₹"],
+    "decimal_places": 2,
+    "note": "The phrasing 'inclusive of all taxes' or 'incl. of all taxes' is required on the label."
+  },
+
+  "date_format_rules": {
+    "manufacturing": {
+      "required_precision": "month and year",
+      "formats": ["MM/YYYY", "MM-YYYY", "MON-YY", "MON YYYY"]
+    },
+    "expiry": {
+      "required_precision": "at minimum month and year",
+      "formats": ["MM/YYYY", "MM-YYYY", "MON-YY", "DD/MM/YYYY", "DD-MM-YYYY"]
+    }
+  }
+}

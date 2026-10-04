@@ -1,0 +1,14 @@
+node_modules
+frontend/node_modules
+frontend/dist
+data/uploads/*
+data/reports/*
+data/*.db
+__pycache__
+backend/__pycache__
+*.pyc
+.DS_Store
+.git
+.gitignore
+*.md
+labels/
